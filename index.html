@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מחולל פורטרטים PRO</title>
+    <title>מחולל תמונות PRO - ריבוי מנועים</title>
     <style>
         body { 
             font-family: system-ui, -apple-system, sans-serif; 
@@ -34,6 +34,7 @@
             box-sizing: border-box;
             background-color: #f9fafb;
         }
+        .model-select { border-color: #8b5cf6; background-color: #f5f3ff; color: #4c1d95; font-weight: bold; }
         .btn { 
             width: 100%; 
             padding: 14px; 
@@ -55,7 +56,6 @@
             text-align: center;
             box-sizing: border-box;
         }
-        .download-btn:active { background-color: #059669; }
         
         #result-container { 
             margin-top: 24px; 
@@ -80,6 +80,17 @@
 <body>
     <div class="app-container">
         <h2>מחולל תמונות PRO</h2>
+
+        <!-- בחירת מנוע AI -->
+        <div class="control-group">
+            <label for="aiModel">בחר מנוע בינה מלאכותית:</label>
+            <select id="aiModel" class="model-select">
+                <option value="flux">מנוע Flux (ריאליזם מירבי)</option>
+                <option value="flux-realism">מנוע Flux Realism (מותאם לאנשים)</option>
+                <option value="turbo">מנוע SDXL (מעולה לגוף שלם ולפרופורציות)</option>
+                <option value="dall-e-3">מנוע DALL-E 3 (סגנון חלק וקלאסי)</option>
+            </select>
+        </div>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -118,8 +129,6 @@
                 <option value="extreme close-up macro shot of the face">קלוז אפ (תקריב פנים)</option>
                 <option value="torso shot, upper body">טורסו (חצי גוף עליון)</option>
                 <option value="three-quarter length shot, from knees up">שלושת רבעי (מהברכיים ומעלה)</option>
-                <option value="side profile shot">פרופיל (מהצד)</option>
-                <option value="shot from behind, back view">מהגב (מאחור)</option>
             </select>
         </div>
 
@@ -131,14 +140,11 @@
                 <option value="street background">רחוב</option>
                 <option value="nature environment, forest or sea">טבע (ים / יער)</option>
                 <option value="office environment">משרד</option>
-                <option value="shopping mall interior">קניון</option>
-                <option value="store interior">חנות</option>
                 <option value="living room interior">סלון</option>
-                <option value="bedroom interior">חדר שינה</option>
             </select>
         </div>
 
-        <button class="btn generate-btn" onclick="generateImage()">צלם תמונה מציאותית</button>
+        <button class="btn generate-btn" onclick="generateImage()">צלם תמונה</button>
         <a id="download-link" class="btn download-btn" download="real-photo.jpg">הורד תמונה</a>
 
         <div class="loader" id="loader">מצלם... (אנא המתן מספר שניות)</div>
@@ -150,6 +156,7 @@
 
     <script>
         function generateImage() {
+            const aiModel = document.getElementById('aiModel').value;
             const age = document.getElementById('age').value;
             const gender = document.getElementById('gender').value;
             const shotType = document.getElementById('shotType').value;
@@ -173,14 +180,13 @@
             resultContainer.style.display = 'none';
             downloadBtn.style.display = 'none';
 
-            // פרומפט מעודכן שדורש פרופורציות מושלמות ומונע עיוותים
-            const promptText = `A hyper-realistic, raw, unedited documentary photograph of an everyday ${age} years old ${nationality} ${gender}${appearanceText}${styleText}. Shot framing: ${shotType}. Set in a ${background}. Shot on high-end DSLR, sharp focus, perfect anatomical proportions. Real human flaws, natural uneven skin texture, amateur photography style, no digital enhancement, absolute photorealism.`;
+            const promptText = `A highly detailed documentary photograph of a ${age} years old ${nationality} ${gender}${appearanceText}${styleText}. Shot framing: ${shotType}. Set in a ${background}. Perfect anatomical proportions, sharp focus, natural uneven skin texture, photorealistic.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // חזרנו לרזולוציה אופטימלית של 768x1024 שלא גורמת למתיחות וטשטוש!
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&nologo=true&seed=${randomSeed}&model=flux&enhance=false`;
+            // שימוש במנוע ה-AI שנבחר מהתפריט
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&nologo=true&seed=${randomSeed}&model=${aiModel}&enhance=false`;
 
             img.onload = function() {
                 loader.style.display = 'none';
