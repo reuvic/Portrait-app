@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מחולל פורטרטים</title>
+    <title>מחולל פורטרטים - פוטוריאליסטי</title>
     <style>
         body { 
             font-family: system-ui, -apple-system, sans-serif; 
@@ -58,7 +58,7 @@
 </head>
 <body>
     <div class="app-container">
-        <h2>מחולל פורטרטים</h2>
+        <h2>מחולל פורטרטים - פוטוריאליסטי</h2>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -78,6 +78,11 @@
             <label for="nationality">לאום / מוצא (באנגלית מומלץ):</label>
             <input type="text" id="nationality" placeholder="לדוגמה: Israeli, Japanese, Ethiopian" value="Mediterranean">
         </div>
+        
+         <div class="control-group">
+            <label for="style">סגנון לבוש (אופציונלי):</label>
+            <input type="text" id="style" placeholder="לדוגמה: Orthodox Jew, casual, suit" value="">
+        </div>
 
         <button class="generate-btn" onclick="generateImage()">צור פורטרט</button>
 
@@ -93,6 +98,9 @@
             const gender = document.getElementById('gender').value;
             let nationality = document.getElementById('nationality').value.trim();
             if(!nationality) nationality = 'random';
+            
+            let style = document.getElementById('style').value.trim();
+            let styleText = style ? `, wearing ${style}` : '';
 
             const loader = document.getElementById('loader');
             const img = document.getElementById('portrait-img');
@@ -100,14 +108,13 @@
             loader.style.display = 'block';
             img.style.display = 'none';
 
-            // בניית ההנחיה (פרומפט) למודל התמונה עם דגש על איכות צילום גבוהה ותאורת סטודיו
-            const promptText = `A highly detailed, realistic portrait photography of a ${age} years old ${nationality} ${gender}, looking directly at the camera, studio lighting, fine art photography, sharp focus, 8k resolution`;
+            const promptText = `Ultra-realistic headshot portrait of a ${age}-year-old ${nationality} ${gender}${styleText}. Shot on Sony A7RV, 85mm f/1.4 lens, shallow depth of field. Professional studio lighting, soft shadows, neutral grey background. Absolute photorealism, raw unedited photography, highly detailed skin texture, pores, peach fuzz, subtle natural skin blemishes, asymmetrical facial features, sharp focus on the eyes. Not an illustration, not a painting, no 3D render.`;
             
-            // שימוש ב-Seed אקראי כדי לקבל תמונה שונה בכל לחיצה
             const randomSeed = Math.floor(Math.random() * 1000000);
-            
             const encodedPrompt = encodeURIComponent(promptText);
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&seed=${randomSeed}`;
+            
+            // מודל FLUX לריאליזם מירבי
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&seed=${randomSeed}&model=flux`;
 
             img.onload = function() {
                 loader.style.display = 'none';
