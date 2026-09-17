@@ -71,7 +71,7 @@
         #portrait-img { 
             width: 100%; 
             height: auto;
-            margin-bottom: -40px; /* הסתרת הלוגו התחתון */
+            margin-bottom: -40px;
             display: block; 
         }
         .loader { display: none; color: #6b7280; font-size: 15px; margin-top: 20px; text-align: center; font-weight: bold; }
@@ -100,10 +100,9 @@
             <input type="text" id="nationality" placeholder="לדוגמה: Israeli, Polish, Moroccan" value="Mediterranean">
         </div>
 
-        <!-- שדה חדש: תיאור פיזי חופשי -->
         <div class="control-group">
             <label for="appearance">מראה גופני ושיער (חופשי באנגלית):</label>
-            <input type="text" id="appearance" placeholder="לדוגמה: tall, overweight, curly red hair, freckles" value="">
+            <input type="text" id="appearance" placeholder="לדוגמה: tall, overweight, curly red hair" value="">
         </div>
         
          <div class="control-group">
@@ -139,10 +138,10 @@
             </select>
         </div>
 
-        <button class="btn generate-btn" onclick="generateImage()">צלם תמונה בפורמט גדול</button>
-        <a id="download-link" class="btn download-btn" download="high-res-photo.jpg">הורד תמונה (HD)</a>
+        <button class="btn generate-btn" onclick="generateImage()">צלם תמונה מציאותית</button>
+        <a id="download-link" class="btn download-btn" download="real-photo.jpg">הורד תמונה</a>
 
-        <div class="loader" id="loader">מייצר תמונה ברזולוציה גבוהה (אנא המתן)...</div>
+        <div class="loader" id="loader">מצלם... (אנא המתן מספר שניות)</div>
         
         <div id="result-container">
             <img id="portrait-img" alt="תמונה מיוצרת" crossorigin="anonymous" />
@@ -174,14 +173,14 @@
             resultContainer.style.display = 'none';
             downloadBtn.style.display = 'none';
 
-            // פרומפט משופר המשלב את המראה הגופני
-            const promptText = `A hyper-realistic, raw, unedited documentary photograph of an everyday ${age} years old ${nationality} ${gender}${appearanceText}${styleText}. Shot framing: ${shotType}. Set in a ${background}. Shot on high-end DSLR, highly detailed, sharp focus. Real human flaws, natural uneven skin texture, visible pores, amateur photography style, no digital enhancement, absolute photorealism.`;
+            // פרומפט מעודכן שדורש פרופורציות מושלמות ומונע עיוותים
+            const promptText = `A hyper-realistic, raw, unedited documentary photograph of an everyday ${age} years old ${nationality} ${gender}${appearanceText}${styleText}. Shot framing: ${shotType}. Set in a ${background}. Shot on high-end DSLR, sharp focus, perfect anatomical proportions. Real human flaws, natural uneven skin texture, amateur photography style, no digital enhancement, absolute photorealism.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // שינוי המידות לפורמט לאורך 1024x1536 - אידיאלי לצילום גוף שלם ואיכות HD
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1536&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
+            // חזרנו לרזולוציה אופטימלית של 768x1024 שלא גורמת למתיחות וטשטוש!
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=1024&nologo=true&seed=${randomSeed}&model=flux&enhance=false`;
 
             img.onload = function() {
                 loader.style.display = 'none';
