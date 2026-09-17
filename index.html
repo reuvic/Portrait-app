@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מחולל פורטרטים - מודל ריאליזם</title>
+    <title>מחולל פורטרטים - צילום אותנטי</title>
     <style>
         body { 
             font-family: system-ui, -apple-system, sans-serif; 
@@ -33,10 +33,9 @@
             font-size: 16px; 
             box-sizing: border-box;
         }
-        .generate-btn { 
+        .btn { 
             width: 100%; 
             padding: 14px; 
-            background-color: #2563eb; 
             color: white; 
             border: none; 
             border-radius: 8px; 
@@ -44,21 +43,43 @@
             font-weight: bold; 
             cursor: pointer; 
             transition: background 0.2s;
+            margin-bottom: 10px;
         }
+        .generate-btn { background-color: #2563eb; }
         .generate-btn:active { background-color: #1d4ed8; }
-        #result-container { margin-top: 24px; text-align: center; }
+        .download-btn { 
+            background-color: #10b981; 
+            display: none; /* מוסתר בהתחלה */
+            text-decoration: none;
+            text-align: center;
+            box-sizing: border-box;
+        }
+        .download-btn:active { background-color: #059669; }
+        
+        #result-container { 
+            margin-top: 24px; 
+            text-align: center; 
+            position: relative;
+            /* שינויים אלו מאפשרים לחתוך את החלק התחתון של התמונה איפה שהלוגו נמצא */
+            overflow: hidden; 
+            border-radius: 12px;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            display: none; /* מוסתר עד שיש תמונה */
+        }
+        
         #portrait-img { 
             width: 100%; 
-            border-radius: 12px; 
-            display: none; 
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            /* עושים את התמונה קצת יותר ארוכה כדי שהלוגו יהיה מחוץ למסגרת */
+            height: auto;
+            margin-bottom: -35px; /* הערך הזה "דוחף" את הלוגו למטה מעבר לגבולות הקונטיינר החתוך */
+            display: block; 
         }
-        .loader { display: none; color: #666; font-size: 15px; }
+        .loader { display: none; color: #666; font-size: 15px; margin-top: 20px; text-align: center; }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <h2>מחולל פורטרטים - ריאליזם</h2>
+        <h2>מחולל פורטרטים אמיתיים</h2>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -84,11 +105,13 @@
             <input type="text" id="style" placeholder="לדוגמה: Orthodox Jew, casual, suit" value="">
         </div>
 
-        <button class="generate-btn" onclick="generateImage()">צור פורטרט</button>
+        <button class="btn generate-btn" onclick="generateImage()">צור פורטרט</button>
+        <a id="download-link" class="btn download-btn" download="portrait.jpg">הורד תמונה</a>
 
+        <div class="loader" id="loader">מייצר תמונה (זה עשוי לקחת מספר שניות)...</div>
+        
         <div id="result-container">
-            <div class="loader" id="loader">מייצר תמונה (זה עשוי לקחת מספר שניות)...</div>
-            <img id="portrait-img" alt="פורטרט מיוצר" />
+            <img id="portrait-img" alt="פורטרט מיוצר" crossorigin="anonymous" />
         </div>
     </div>
 
@@ -104,29 +127,42 @@
 
             const loader = document.getElementById('loader');
             const img = document.getElementById('portrait-img');
+            const resultContainer = document.getElementById('result-container');
+            const downloadBtn = document.getElementById('download-link');
 
             loader.style.display = 'block';
-            img.style.display = 'none';
+            resultContainer.style.display = 'none';
+            downloadBtn.style.display = 'none';
 
-            // פרומפט נקי ופשוט למראה טבעי, ללא מונחים שמבלבלים את המודל
-            const promptText = `A candid, everyday polaroid photograph of a ${age} years old ${nationality} ${gender}${styleText}. Real person, unedited, natural lighting, highly realistic.`;
+            // פרומפט שמתמקד ב"כיעור" טבעי, צילום אנלוגי, ומרקם לא מוחלק
+            const promptText = `A gritty, unedited documentary style photograph of an everyday ${age} years old ${nationality} ${gender}${styleText}. Shot on 35mm film, grainy, harsh lighting. Real human flaws, textured skin, visible pores, wrinkles, uneven skin tone, messy hair, not conventionally attractive. Absolutely no makeup, no filters, no digital smoothing, highly realistic amateur photography.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // שימוש קריטי במודל flux-realism שאמון על ביטול סגנון ציור/אנימציה
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=768&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
+            // מבקש תמונה מעט יותר גבוהה (1024x1080) כדי שנוכל לחתוך את הלוגו למטה
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1080&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
 
             img.onload = function() {
                 loader.style.display = 'none';
-                img.style.display = 'block';
+                resultContainer.style.display = 'block';
+                downloadBtn.style.display = 'block';
             };
             
             img.onerror = function() {
+                loader.style.display = 'block';
                 loader.innerText = 'אירעה שגיאה בטעינת התמונה. נסה שוב.';
             };
 
             img.src = imageUrl;
+            
+            // הפיכת התמונה לקובץ שאפשר להוריד
+            fetch(imageUrl)
+                .then(response => response.blob())
+                .then(blob => {
+                    const url = window.URL.createObjectURL(blob);
+                    downloadBtn.href = url;
+                });
         }
     </script>
 </body>
