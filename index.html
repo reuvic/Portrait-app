@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מחולל פורטרטים - ריאליזם מקסימלי</title>
+    <title>מחולל פורטרטים - מודל ריאליזם</title>
     <style>
         body { 
             font-family: system-ui, -apple-system, sans-serif; 
@@ -58,7 +58,7 @@
 </head>
 <body>
     <div class="app-container">
-        <h2>מחולל פורטרטים אמיתיים</h2>
+        <h2>מחולל פורטרטים - ריאליזם</h2>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -108,14 +108,14 @@
             loader.style.display = 'block';
             img.style.display = 'none';
 
-            // פרומפט המתמקד בצילום גולמי, פגמי עור וללא עריכה
-            const promptText = `A raw, unedited amateur photograph of a ${age} years old ${nationality} ${gender}${styleText}. Candid photo, real person, real human skin texture, pores, imperfections, no makeup, unretouched, normal everyday lighting, 35mm film style. Absolutely no digital art, no smoothing, not an illustration.`;
+            // פרומפט נקי ופשוט למראה טבעי, ללא מונחים שמבלבלים את המודל
+            const promptText = `A candid, everyday polaroid photograph of a ${age} years old ${nationality} ${gender}${styleText}. Real person, unedited, natural lighting, highly realistic.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // כאן הוספתי את הפקודה enhance=false שמכבה את הפילטרים המצוירים של השרת, והגדלתי רזולוציה
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=768&nologo=true&seed=${randomSeed}&model=flux&enhance=false`;
+            // שימוש קריטי במודל flux-realism שאמון על ביטול סגנון ציור/אנימציה
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=768&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
 
             img.onload = function() {
                 loader.style.display = 'none';
