@@ -3,11 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מחולל פורטרטים - צילום אותנטי</title>
+    <title>מחולל פורטרטים PRO</title>
     <style>
         body { 
             font-family: system-ui, -apple-system, sans-serif; 
-            background-color: #f0f2f5; 
+            background-color: #e5e7eb; 
             margin: 0; 
             padding: 20px; 
             display: flex; 
@@ -19,18 +19,18 @@
             max-width: 450px; 
             padding: 24px; 
             border-radius: 16px; 
-            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+            box-shadow: 0 10px 25px rgba(0,0,0,0.1); 
         }
-        h2 { text-align: center; color: #333; margin-top: 0; }
+        h2 { text-align: center; color: #1f2937; margin-top: 0; }
         .control-group { margin-bottom: 16px; }
-        label { display: block; margin-bottom: 6px; font-weight: 600; color: #555; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #4b5563; font-size: 14px; }
         input[type="range"] { width: 100%; margin-top: 5px; }
         select, input[type="text"] { 
             width: 100%; 
             padding: 10px; 
-            border: 1px solid #ccc; 
+            border: 1px solid #d1d5db; 
             border-radius: 8px; 
-            font-size: 16px; 
+            font-size: 15px; 
             box-sizing: border-box;
             background-color: #f9fafb;
         }
@@ -63,22 +63,23 @@
             position: relative;
             overflow: hidden; 
             border-radius: 12px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
             display: none; 
+            background-color: #f3f4f6;
         }
         
         #portrait-img { 
             width: 100%; 
             height: auto;
-            margin-bottom: -35px; /* הסתרת הלוגו של AI */
+            margin-bottom: -40px; /* הסתרת הלוגו התחתון */
             display: block; 
         }
-        .loader { display: none; color: #666; font-size: 15px; margin-top: 20px; text-align: center; }
+        .loader { display: none; color: #6b7280; font-size: 15px; margin-top: 20px; text-align: center; font-weight: bold; }
     </style>
 </head>
 <body>
     <div class="app-container">
-        <h2>מחולל תמונות ריאליסטיות</h2>
+        <h2>מחולל תמונות PRO</h2>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -95,23 +96,29 @@
         </div>
 
         <div class="control-group">
-            <label for="nationality">לאום / מוצא (באנגלית מומלץ):</label>
-            <input type="text" id="nationality" placeholder="לדוגמה: Israeli, Japanese, Ethiopian" value="Mediterranean">
+            <label for="nationality">לאום / מוצא (אנגלית):</label>
+            <input type="text" id="nationality" placeholder="לדוגמה: Israeli, Polish, Moroccan" value="Mediterranean">
+        </div>
+
+        <!-- שדה חדש: תיאור פיזי חופשי -->
+        <div class="control-group">
+            <label for="appearance">מראה גופני ושיער (חופשי באנגלית):</label>
+            <input type="text" id="appearance" placeholder="לדוגמה: tall, overweight, curly red hair, freckles" value="">
         </div>
         
          <div class="control-group">
-            <label for="style">סגנון לבוש (אופציונלי):</label>
+            <label for="style">סגנון לבוש (אנגלית):</label>
             <input type="text" id="style" placeholder="לדוגמה: Orthodox Jew, casual, suit" value="">
         </div>
 
         <div class="control-group">
             <label for="shotType">זווית צילום וחיתוך:</label>
             <select id="shotType">
-                <option value="portrait shot">פורטרט (פנים וכתפיים)</option>
-                <option value="extreme close-up shot">קלוז אפ (תקריב פנים)</option>
-                <option value="torso shot, upper body">טורסו (חצי גוף)</option>
-                <option value="three-quarter length shot, from knees up">שלושת רבעי (גוף)</option>
-                <option value="full body shot, head to toe">גוף שלם</option>
+                <option value="wide angle full body shot from head to toe, showing entire body including shoes">גוף שלם (מכף רגל ועד ראש)</option>
+                <option value="portrait shot, head and shoulders">פורטרט (פנים וכתפיים)</option>
+                <option value="extreme close-up macro shot of the face">קלוז אפ (תקריב פנים)</option>
+                <option value="torso shot, upper body">טורסו (חצי גוף עליון)</option>
+                <option value="three-quarter length shot, from knees up">שלושת רבעי (מהברכיים ומעלה)</option>
                 <option value="side profile shot">פרופיל (מהצד)</option>
                 <option value="shot from behind, back view">מהגב (מאחור)</option>
             </select>
@@ -128,14 +135,14 @@
                 <option value="shopping mall interior">קניון</option>
                 <option value="store interior">חנות</option>
                 <option value="living room interior">סלון</option>
-                <option value="bedroom interior">חדר שינה (מיטות)</option>
+                <option value="bedroom interior">חדר שינה</option>
             </select>
         </div>
 
-        <button class="btn generate-btn" onclick="generateImage()">צור תמונה</button>
-        <a id="download-link" class="btn download-btn" download="realistic-photo.jpg">הורד תמונה</a>
+        <button class="btn generate-btn" onclick="generateImage()">צלם תמונה בפורמט גדול</button>
+        <a id="download-link" class="btn download-btn" download="high-res-photo.jpg">הורד תמונה (HD)</a>
 
-        <div class="loader" id="loader">מצלם תמונה (זה עשוי לקחת מספר שניות)...</div>
+        <div class="loader" id="loader">מייצר תמונה ברזולוציה גבוהה (אנא המתן)...</div>
         
         <div id="result-container">
             <img id="portrait-img" alt="תמונה מיוצרת" crossorigin="anonymous" />
@@ -148,8 +155,12 @@
             const gender = document.getElementById('gender').value;
             const shotType = document.getElementById('shotType').value;
             const background = document.getElementById('background').value;
+            
             let nationality = document.getElementById('nationality').value.trim();
             if(!nationality) nationality = 'random';
+            
+            let appearance = document.getElementById('appearance').value.trim();
+            let appearanceText = appearance ? `, appearance: ${appearance}` : '';
             
             let style = document.getElementById('style').value.trim();
             let styleText = style ? `, wearing ${style}` : '';
@@ -163,14 +174,14 @@
             resultContainer.style.display = 'none';
             downloadBtn.style.display = 'none';
 
-            // בניית הפרומפט המשלבת את החיתוך ואת הרקע החדשים עם סגנון תיעודי אותנטי
-            const promptText = `A gritty, unedited documentary style ${shotType} of an everyday ${age} years old ${nationality} ${gender}${styleText}. Set in a ${background}. Shot on 35mm film, grainy, natural lighting. Real human flaws, textured skin, visible pores, wrinkles, uneven skin tone, messy hair, not conventionally attractive. Absolutely no makeup, no filters, no digital smoothing, highly realistic amateur photography.`;
+            // פרומפט משופר המשלב את המראה הגופני
+            const promptText = `A hyper-realistic, raw, unedited documentary photograph of an everyday ${age} years old ${nationality} ${gender}${appearanceText}${styleText}. Shot framing: ${shotType}. Set in a ${background}. Shot on high-end DSLR, highly detailed, sharp focus. Real human flaws, natural uneven skin texture, visible pores, amateur photography style, no digital enhancement, absolute photorealism.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // תמונה גבוהה מעט כדי לחתוך את הלוגו, שימוש במודל flux-realism
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1080&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
+            // שינוי המידות לפורמט לאורך 1024x1536 - אידיאלי לצילום גוף שלם ואיכות HD
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1536&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
 
             img.onload = function() {
                 loader.style.display = 'none';
@@ -180,7 +191,7 @@
             
             img.onerror = function() {
                 loader.style.display = 'block';
-                loader.innerText = 'אירעה שגיאה בטעינת התמונה. נסה שוב.';
+                loader.innerText = 'אירעה שגיאה. השרת עמוס, נסה ללחוץ שוב.';
             };
 
             img.src = imageUrl;
