@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>מחולל פורטרטים</title>
+    <style>
+        body { 
+            font-family: system-ui, -apple-system, sans-serif; 
+            background-color: #f0f2f5; 
+            margin: 0; 
+            padding: 20px; 
+            display: flex; 
+            justify-content: center;
+        }
+        .app-container { 
+            background: white; 
+            width: 100%; 
+            max-width: 400px; 
+            padding: 24px; 
+            border-radius: 16px; 
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
+        }
+        h2 { text-align: center; color: #333; margin-top: 0; }
+        .control-group { margin-bottom: 20px; }
+        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        input[type="range"] { width: 100%; margin-top: 5px; }
+        select, input[type="text"] { 
+            width: 100%; 
+            padding: 10px; 
+            border: 1px solid #ccc; 
+            border-radius: 8px; 
+            font-size: 16px; 
+            box-sizing: border-box;
+        }
+        .generate-btn { 
+            width: 100%; 
+            padding: 14px; 
+            background-color: #2563eb; 
+            color: white; 
+            border: none; 
+            border-radius: 8px; 
+            font-size: 18px; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: background 0.2s;
+        }
+        .generate-btn:active { background-color: #1d4ed8; }
+        #result-container { margin-top: 24px; text-align: center; }
+        #portrait-img { 
+            width: 100%; 
+            border-radius: 12px; 
+            display: none; 
+            box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+        }
+        .loader { display: none; color: #666; font-size: 15px; }
+    </style>
+</head>
+<body>
+    <div class="app-container">
+        <h2>מחולל פורטרטים</h2>
+
+        <div class="control-group">
+            <label for="age">גיל: <span id="age-display">35</span></label>
+            <input type="range" id="age" min="1" max="90" value="35" oninput="document.getElementById('age-display').innerText = this.value">
+        </div>
+
+        <div class="control-group">
+            <label for="gender">מגדר:</label>
+            <select id="gender">
+                <option value="man">גבר</option>
+                <option value="woman">אישה</option>
+                <option value="androgynous person">אנדרוגיני / לא מוגדר</option>
+            </select>
+        </div>
+
+        <div class="control-group">
+            <label for="nationality">לאום / מוצא (באנגלית מומלץ):</label>
+            <input type="text" id="nationality" placeholder="לדוגמה: Israeli, Japanese, Ethiopian" value="Mediterranean">
+        </div>
+
+        <button class="generate-btn" onclick="generateImage()">צור פורטרט</button>
+
+        <div id="result-container">
+            <div class="loader" id="loader">מייצר תמונה (זה עשוי לקחת מספר שניות)...</div>
+            <img id="portrait-img" alt="פורטרט מיוצר" />
+        </div>
+    </div>
+
+    <script>
+        function generateImage() {
+            const age = document.getElementById('age').value;
+            const gender = document.getElementById('gender').value;
+            let nationality = document.getElementById('nationality').value.trim();
+            if(!nationality) nationality = 'random';
+
+            const loader = document.getElementById('loader');
+            const img = document.getElementById('portrait-img');
+
+            loader.style.display = 'block';
+            img.style.display = 'none';
+
+            // בניית ההנחיה (פרומפט) למודל התמונה עם דגש על איכות צילום גבוהה ותאורת סטודיו
+            const promptText = `A highly detailed, realistic portrait photography of a ${age} years old ${nationality} ${gender}, looking directly at the camera, studio lighting, fine art photography, sharp focus, 8k resolution`;
+            
+            // שימוש ב-Seed אקראי כדי לקבל תמונה שונה בכל לחיצה
+            const randomSeed = Math.floor(Math.random() * 1000000);
+            
+            const encodedPrompt = encodeURIComponent(promptText);
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&seed=${randomSeed}`;
+
+            img.onload = function() {
+                loader.style.display = 'none';
+                img.style.display = 'block';
+            };
+            
+            img.onerror = function() {
+                loader.innerText = 'אירעה שגיאה בטעינת התמונה. נסה שוב.';
+            };
+
+            img.src = imageUrl;
+        }
+    </script>
+</body>
+</html>
