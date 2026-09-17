@@ -100,10 +100,9 @@
             loader.style.display = 'block';
             img.style.display = 'none';
 
-            // בניית ההנחיה (פרומפט) למודל התמונה עם דגש על איכות צילום גבוהה ותאורת סטודיו
-            const promptText = `A highly detailed, realistic portrait photography of a ${age} years old ${nationality} ${gender}, looking directly at the camera, studio lighting, fine art photography, sharp focus, 8k resolution`;
+            // שיניתי כאן את ההנחיה כדי להכריח את המודל לייצר צילום מציאותי לחלוטין ולא איור
+            const promptText = `RAW unedited photograph of a ${age} years old ${nationality} ${gender}, everyday person, ultra realistic, photorealistic, real human skin texture with pores and imperfections, shot on DSLR, 85mm lens, natural daylight, sharp focus, 8k resolution`;
             
-            // שימוש ב-Seed אקראי כדי לקבל תמונה שונה בכל לחיצה
             const randomSeed = Math.floor(Math.random() * 1000000);
             
             const encodedPrompt = encodeURIComponent(promptText);
