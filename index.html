@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <title>מחולל פורטרטים - פוטוריאליסטי</title>
+    <title>מחולל פורטרטים - ריאליזם מקסימלי</title>
     <style>
         body { 
             font-family: system-ui, -apple-system, sans-serif; 
@@ -58,7 +58,7 @@
 </head>
 <body>
     <div class="app-container">
-        <h2>מחולל פורטרטים - פוטוריאליסטי</h2>
+        <h2>מחולל פורטרטים אמיתיים</h2>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -108,13 +108,14 @@
             loader.style.display = 'block';
             img.style.display = 'none';
 
-            const promptText = `Ultra-realistic headshot portrait of a ${age}-year-old ${nationality} ${gender}${styleText}. Shot on Sony A7RV, 85mm f/1.4 lens, shallow depth of field. Professional studio lighting, soft shadows, neutral grey background. Absolute photorealism, raw unedited photography, highly detailed skin texture, pores, peach fuzz, subtle natural skin blemishes, asymmetrical facial features, sharp focus on the eyes. Not an illustration, not a painting, no 3D render.`;
+            // פרומפט המתמקד בצילום גולמי, פגמי עור וללא עריכה
+            const promptText = `A raw, unedited amateur photograph of a ${age} years old ${nationality} ${gender}${styleText}. Candid photo, real person, real human skin texture, pores, imperfections, no makeup, unretouched, normal everyday lighting, 35mm film style. Absolutely no digital art, no smoothing, not an illustration.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // מודל FLUX לריאליזם מירבי
-            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=512&height=512&nologo=true&seed=${randomSeed}&model=flux`;
+            // כאן הוספתי את הפקודה enhance=false שמכבה את הפילטרים המצוירים של השרת, והגדלתי רזולוציה
+            const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=768&height=768&nologo=true&seed=${randomSeed}&model=flux&enhance=false`;
 
             img.onload = function() {
                 loader.style.display = 'none';
