@@ -16,14 +16,14 @@
         .app-container { 
             background: white; 
             width: 100%; 
-            max-width: 400px; 
+            max-width: 450px; 
             padding: 24px; 
             border-radius: 16px; 
             box-shadow: 0 4px 12px rgba(0,0,0,0.1); 
         }
         h2 { text-align: center; color: #333; margin-top: 0; }
-        .control-group { margin-bottom: 20px; }
-        label { display: block; margin-bottom: 8px; font-weight: 600; color: #555; }
+        .control-group { margin-bottom: 16px; }
+        label { display: block; margin-bottom: 6px; font-weight: 600; color: #555; }
         input[type="range"] { width: 100%; margin-top: 5px; }
         select, input[type="text"] { 
             width: 100%; 
@@ -32,6 +32,7 @@
             border-radius: 8px; 
             font-size: 16px; 
             box-sizing: border-box;
+            background-color: #f9fafb;
         }
         .btn { 
             width: 100%; 
@@ -45,11 +46,11 @@
             transition: background 0.2s;
             margin-bottom: 10px;
         }
-        .generate-btn { background-color: #2563eb; }
+        .generate-btn { background-color: #2563eb; margin-top: 10px; }
         .generate-btn:active { background-color: #1d4ed8; }
         .download-btn { 
             background-color: #10b981; 
-            display: none; /* מוסתר בהתחלה */
+            display: none; 
             text-decoration: none;
             text-align: center;
             box-sizing: border-box;
@@ -60,18 +61,16 @@
             margin-top: 24px; 
             text-align: center; 
             position: relative;
-            /* שינויים אלו מאפשרים לחתוך את החלק התחתון של התמונה איפה שהלוגו נמצא */
             overflow: hidden; 
             border-radius: 12px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.15);
-            display: none; /* מוסתר עד שיש תמונה */
+            display: none; 
         }
         
         #portrait-img { 
             width: 100%; 
-            /* עושים את התמונה קצת יותר ארוכה כדי שהלוגו יהיה מחוץ למסגרת */
             height: auto;
-            margin-bottom: -35px; /* הערך הזה "דוחף" את הלוגו למטה מעבר לגבולות הקונטיינר החתוך */
+            margin-bottom: -35px; /* הסתרת הלוגו של AI */
             display: block; 
         }
         .loader { display: none; color: #666; font-size: 15px; margin-top: 20px; text-align: center; }
@@ -79,7 +78,7 @@
 </head>
 <body>
     <div class="app-container">
-        <h2>מחולל פורטרטים אמיתיים</h2>
+        <h2>מחולל תמונות ריאליסטיות</h2>
 
         <div class="control-group">
             <label for="age">גיל: <span id="age-display">35</span></label>
@@ -105,13 +104,41 @@
             <input type="text" id="style" placeholder="לדוגמה: Orthodox Jew, casual, suit" value="">
         </div>
 
-        <button class="btn generate-btn" onclick="generateImage()">צור פורטרט</button>
-        <a id="download-link" class="btn download-btn" download="portrait.jpg">הורד תמונה</a>
+        <div class="control-group">
+            <label for="shotType">זווית צילום וחיתוך:</label>
+            <select id="shotType">
+                <option value="portrait shot">פורטרט (פנים וכתפיים)</option>
+                <option value="extreme close-up shot">קלוז אפ (תקריב פנים)</option>
+                <option value="torso shot, upper body">טורסו (חצי גוף)</option>
+                <option value="three-quarter length shot, from knees up">שלושת רבעי (גוף)</option>
+                <option value="full body shot, head to toe">גוף שלם</option>
+                <option value="side profile shot">פרופיל (מהצד)</option>
+                <option value="shot from behind, back view">מהגב (מאחור)</option>
+            </select>
+        </div>
 
-        <div class="loader" id="loader">מייצר תמונה (זה עשוי לקחת מספר שניות)...</div>
+        <div class="control-group">
+            <label for="background">סביבה ורקע:</label>
+            <select id="background">
+                <option value="neutral plain background">נייטראלי (סטודיו)</option>
+                <option value="urban outdoor environment">חוץ עירוני</option>
+                <option value="street background">רחוב</option>
+                <option value="nature environment, forest or sea">טבע (ים / יער)</option>
+                <option value="office environment">משרד</option>
+                <option value="shopping mall interior">קניון</option>
+                <option value="store interior">חנות</option>
+                <option value="living room interior">סלון</option>
+                <option value="bedroom interior">חדר שינה (מיטות)</option>
+            </select>
+        </div>
+
+        <button class="btn generate-btn" onclick="generateImage()">צור תמונה</button>
+        <a id="download-link" class="btn download-btn" download="realistic-photo.jpg">הורד תמונה</a>
+
+        <div class="loader" id="loader">מצלם תמונה (זה עשוי לקחת מספר שניות)...</div>
         
         <div id="result-container">
-            <img id="portrait-img" alt="פורטרט מיוצר" crossorigin="anonymous" />
+            <img id="portrait-img" alt="תמונה מיוצרת" crossorigin="anonymous" />
         </div>
     </div>
 
@@ -119,6 +146,8 @@
         function generateImage() {
             const age = document.getElementById('age').value;
             const gender = document.getElementById('gender').value;
+            const shotType = document.getElementById('shotType').value;
+            const background = document.getElementById('background').value;
             let nationality = document.getElementById('nationality').value.trim();
             if(!nationality) nationality = 'random';
             
@@ -134,13 +163,13 @@
             resultContainer.style.display = 'none';
             downloadBtn.style.display = 'none';
 
-            // פרומפט שמתמקד ב"כיעור" טבעי, צילום אנלוגי, ומרקם לא מוחלק
-            const promptText = `A gritty, unedited documentary style photograph of an everyday ${age} years old ${nationality} ${gender}${styleText}. Shot on 35mm film, grainy, harsh lighting. Real human flaws, textured skin, visible pores, wrinkles, uneven skin tone, messy hair, not conventionally attractive. Absolutely no makeup, no filters, no digital smoothing, highly realistic amateur photography.`;
+            // בניית הפרומפט המשלבת את החיתוך ואת הרקע החדשים עם סגנון תיעודי אותנטי
+            const promptText = `A gritty, unedited documentary style ${shotType} of an everyday ${age} years old ${nationality} ${gender}${styleText}. Set in a ${background}. Shot on 35mm film, grainy, natural lighting. Real human flaws, textured skin, visible pores, wrinkles, uneven skin tone, messy hair, not conventionally attractive. Absolutely no makeup, no filters, no digital smoothing, highly realistic amateur photography.`;
             
             const randomSeed = Math.floor(Math.random() * 1000000);
             const encodedPrompt = encodeURIComponent(promptText);
             
-            // מבקש תמונה מעט יותר גבוהה (1024x1080) כדי שנוכל לחתוך את הלוגו למטה
+            // תמונה גבוהה מעט כדי לחתוך את הלוגו, שימוש במודל flux-realism
             const imageUrl = `https://image.pollinations.ai/prompt/${encodedPrompt}?width=1024&height=1080&nologo=true&seed=${randomSeed}&model=flux-realism&enhance=false`;
 
             img.onload = function() {
@@ -156,7 +185,6 @@
 
             img.src = imageUrl;
             
-            // הפיכת התמונה לקובץ שאפשר להוריד
             fetch(imageUrl)
                 .then(response => response.blob())
                 .then(blob => {
